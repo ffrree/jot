@@ -21,7 +21,6 @@
 @property (nonatomic, strong) UIRotationGestureRecognizer *rotationRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, strong, readwrite) JotDrawingContainer *drawingContainer;
-@property (nonatomic, strong) JotDrawView *drawView;
 @property (nonatomic, strong) JotTextEditView *textEditView;
 @property (nonatomic, strong) JotTextView *textView;
 
@@ -349,6 +348,10 @@
 {
     if (self.state == JotViewStateDrawing) {
         [self.drawView drawTouchEnded];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(jotViewControllerDidFinishStroke:)]) {
+        [self.delegate jotViewControllerDidFinishStroke:self];
     }
 }
 

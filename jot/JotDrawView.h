@@ -43,6 +43,13 @@
 @property (nonatomic, strong) UIColor *strokeColor;
 
 /**
+    Exposes the cached image that is used to render previously drawn segments.
+    This is public to enable external undo/redo behavior by reading & writing to this
+    property.
+ */
+@property (nonatomic, strong) UIImage *cachedImage;
+
+/**
  *  Clears all paths from the drawing, giving a blank slate.
  *
  *  @note Call clearDrawing or clearAll in JotViewController
@@ -104,5 +111,6 @@
  *  to trigger this method.
  */
 - (UIImage *)renderDrawingWithSize:(CGSize)size;
+
 
 @end

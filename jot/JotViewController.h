@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, JotViewState){
 
 @import UIKit;
 #import "JotDrawingContainer.h"
+#import "JotDrawView.h"
 
 @protocol JotViewControllerDelegate;
 
@@ -58,6 +59,11 @@ typedef NS_ENUM(NSUInteger, JotViewState){
  *  The delegate of the JotViewController instance.
  */
 @property (nonatomic, weak) id <JotViewControllerDelegate> delegate;
+
+/**
+ The view that handles all drawing. Exposed to provide undo/redo functionality. 
+ */
+@property (nonatomic, strong) JotDrawView *drawView;
 
 /**
  *  The state of the JotViewController. Change the state between JotViewStateDrawing
@@ -228,5 +234,10 @@ typedef NS_ENUM(NSUInteger, JotViewState){
  *  @param isEditing    YES if entering edit (keyboard text entry) mode, NO if exiting edit mode
  */
 - (void)jotViewController:(JotViewController *)jotViewController isEditingText:(BOOL)isEditing;
+
+/** 
+ Called whenever a stroke has just ended. This can be used to support undo.
+ */
+- (void)jotViewControllerDidFinishStroke:(JotViewController *)jotViewController;
 
 @end

@@ -17,10 +17,9 @@ CGFloat const kJotRelativeMinStrokeWidth = 0.4f;
 
 @interface JotDrawView ()
 
-@property (nonatomic, strong) UIImage *cachedImage;
+
 
 @property (nonatomic, strong) NSMutableArray *pathsArray;
-
 @property (nonatomic, strong) JotTouchBezier *bezierPath;
 @property (nonatomic, strong) NSMutableArray *pointsArray;
 @property (nonatomic, assign) NSUInteger pointsCounter;
@@ -161,7 +160,7 @@ CGFloat const kJotRelativeMinStrokeWidth = 0.4f;
     if (self.cachedImage) {
         [self.cachedImage drawAtPoint:CGPointZero];
     }
-
+    
     [self.bezierPath jotDrawBezier];
     self.bezierPath = nil;
     
@@ -177,6 +176,7 @@ CGFloat const kJotRelativeMinStrokeWidth = 0.4f;
     
     self.cachedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
     [self setNeedsDisplay];
 }
 
