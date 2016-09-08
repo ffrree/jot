@@ -8,8 +8,6 @@
 
 #import "JotViewController.h"
 #import "JotDrawView.h"
-#import "JotTextView.h"
-#import "JotTextEditView.h"
 #import <Masonry/Masonry.h>
 #import "UIImage+Jot.h"
 #import "JotDrawingContainer.h"
@@ -21,8 +19,17 @@
 @property (nonatomic, strong) UIRotationGestureRecognizer *rotationRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, strong, readwrite) JotDrawingContainer *drawingContainer;
+
+/**
+ The view that comes up to edit text.
+ */
 @property (nonatomic, strong) JotTextEditView *textEditView;
+
+/**
+ The view that displays text and allows the user to manipulate it.
+ */
 @property (nonatomic, strong) JotTextView *textView;
+
 
 @end
 
@@ -47,6 +54,7 @@
         self.textEditView.textAlignment = NSTextAlignmentLeft;
         _textColor = self.textView.textColor;
         self.textEditView.textColor = self.textColor;
+        _fullScreenTextEditing = YES;
         _textString = @"";
         _drawingColor = self.drawView.strokeColor;
         _drawingStrokeWidth = self.drawView.strokeWidth;
@@ -99,14 +107,57 @@
     }];
     
     [self.view addSubview:self.textEditView];
-    [self.textEditView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
-    }];
+    
+    if (self.fullScreenTextEditing) {
+        [self.textEditView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.view);
+        }];
+    } else {
+        self.textEditView.adjustsContainerForKeyboard = NO;
+        self.textEditView.textView.font = [UIFont systemFontOfSize:20];
+        self.textEditView.textColor = [UIColor whiteColor];
+
+        [self.textEditView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view.mas_left);
+            make.right.equalTo(self.view.mas_right);
+            make.bottom.equalTo(self.view.mas_bottom);
+            make.height.equalTo(@40);
+        }];
+    }
     
     [self.drawingContainer addGestureRecognizer:self.tapRecognizer];
     [self.drawingContainer addGestureRecognizer:self.panRecognizer];
     [self.drawingContainer addGestureRecognizer:self.rotationRecognizer];
     [self.drawingContainer addGestureRecognizer:self.pinchRecognizer];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification *)notification {
+    NSDictionary *info = notification.userInfo;
+    NSValue *frameValue = info[UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [frameValue CGRectValue];
+    CGRect frame = [self.view convertRect:keyboardRect fromView:nil];
+    
+    CGFloat keyboardHeight = CGRectGetHeight(frame);
+    
+    if (!self.fullScreenTextEditing) {
+        [self.textEditView mas_updateConstraints:^(MASConstraintMaker *update) {
+            update.bottom.offset(-keyboardHeight + 44); // WHY??!?
+        }];
+    }
 }
 
 #pragma mark - Properties

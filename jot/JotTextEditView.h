@@ -12,10 +12,17 @@
 @protocol JotTextEditViewDelegate;
 
 /**
- *  Private class to handle text editing. Change the properties
- *  in a JotViewController instance to configure this private class.
+ *  Class to handle text editing. Prefer changing the properties
+ *  in a JotViewController instance to configure this class.
  */
 @interface JotTextEditView : UIView
+
+/**
+ *  If YES, will shift up the text container to compensate for the keyboard.
+ *  Set to NO to change this behavior, for instance for a smaller text view that
+ *  does not need this behavior.
+ */
+@property (nonatomic, assign) BOOL adjustsContainerForKeyboard;
 
 /**
  *  The delegate of the JotTextEditView, which receives an update
@@ -93,6 +100,9 @@
  *  @note Set clipBoundsToEditingInsets in JotViewController to control this property.
  */
 @property (nonatomic, assign) BOOL clipBoundsToEditingInsets;
+
+@property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) UIView *textContainer;
 
 @end
 

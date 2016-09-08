@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, JotViewState){
 @import UIKit;
 #import "JotDrawingContainer.h"
 #import "JotDrawView.h"
+#import "JotTextView.h"
+#import "JotTextEditView.h"
 
 @protocol JotViewControllerDelegate;
 
@@ -64,6 +66,8 @@ typedef NS_ENUM(NSUInteger, JotViewState){
  The view that handles all drawing. Exposed to provide undo/redo functionality. 
  */
 @property (nonatomic, strong) JotDrawView *drawView;
+
+
 
 /**
  *  The state of the JotViewController. Change the state between JotViewStateDrawing
@@ -134,6 +138,13 @@ typedef NS_ENUM(NSUInteger, JotViewState){
  *  is true, then the text will be clipped at the inset instead of fading out.
  */
 @property (nonatomic, assign) UIEdgeInsets textEditingInsets;
+
+/**
+ *  When YES, provides a full screen editing experience.
+ *  When NO, provides a simple text bar above the keyboard,
+ *  similar to Snapchat. Default is YES.
+ */
+@property (nonatomic, assign) BOOL fullScreenTextEditing;
 
 /**
  *  The initial insets of the text displayed in the JotTextView, which only

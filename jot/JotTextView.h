@@ -10,9 +10,9 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  Private class to handle text display and gesture interactions.
+ *  Class to handle text display and gesture interactions.
  *  Change the properties in a JotViewController instance to 
- *  configure this private class.
+ *  configure this class.
  */
 @interface JotTextView : UIView
 
